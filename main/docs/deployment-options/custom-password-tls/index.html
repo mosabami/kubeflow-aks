@@ -33,7 +33,7 @@
 <meta itemprop="description" content="Deploying Kubeflow on AKS with Custom Password and TLS
 "><meta itemprop="datePublished" content="2023-03-07T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2023-03-07T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1273">
+<meta itemprop="wordCount" content="1311">
 <meta itemprop="keywords" content="test,sample,docs," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Deploy Kubeflow with Password, Ingress and TLS"/>
 <meta name="twitter:description" content="Deploying Kubeflow on AKS with Custom Password and TLS
@@ -262,6 +262,15 @@
 	<h2 id="background">Background</h2>
 <p>In this lab you will deploy an Azure Kubernetes Service (AKS) cluster and other Azure services (Container Registry, Managed Identity, Key Vault) with <a href="https://docs.microsoft.com/cli/azure/install-azure-cli">Azure CLI</a> and <a href="https://docs.microsoft.com/azure/azure-resource-manager/bicep/overview">Bicep</a>. You will then install Kubeflow after creating custom Password. This deployment option will also make use of TLS with a self-signed certificate and an ingress controller. Swap out this self signed certificate with your own CA certs for production workloads.</p>
 <h2 id="deploy-kubeflow-with-password-ingress-and-tls">Deploy Kubeflow with Password, Ingress and TLS</h2>
+
+
+<div class="alert alert-warning" role="alert">
+
+
+    ⚠️ Warning: In order to complete this deployment, you will need to have either  <code>User Access Admin</code> <strong>and</strong> <code>Contributor</code> or <code>Owner</code> access to the subscription you are deploying into.
+
+</div>
+
 <p>Use the <a href="https://docs.microsoft.com/cli/azure/install-azure-cli">Azure CLI</a> and <a href="https://docs.microsoft.com/azure/azure-resource-manager/bicep/overview">Bicep</a> templates to deploy the infrastructure for your application. We will be using the <a href="https://github.com/Azure/AKS-Construction">AKS construction</a> project to rapidly deploy the required Azure resources. The project allows users the flexibility to tweak their AKS environment however they want. Please check out the <a href="https://azure.github.io/AKS-Construction/">AKS construction helper</a> for more details about AKS construction.</p>
 <p>You can also try out the automated option using <a href="https://magefile.org/">Mage</a> build tool at the <a href="https://github.com/Azure-Samples/azure-opensource-labs/tree/main/cloud-native/aks-kubeflow#kubeflow-on-azure-kubernetes-service-aks">Azure Open Source Labs</a>.</p>
 <p>Login to the Azure CLI.</p>
@@ -279,6 +288,8 @@
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az aks install-cli
 </span></span></code></pre></div><p>Clone this repo which includes the <a href="https://github.com/Azure/AKS-Construction">Azure/AKS-Construction</a> and <a href="https://github.com/kubeflow/manifests/tree/v1.6-branch">kubeflow/manifests</a> repos as <a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">Git Submodules</a></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone --recurse-submodules https://github.com/Azure/kubeflow-aks.git
+</span></span></code></pre></div><p>Change directory into the newly cloned directory</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#204a87">cd</span> kubeflow-aks
 </span></span></code></pre></div><h2 id="deployment-steps">Deployment steps</h2>
 <p>Get the signed in user id so that you can get admin access to the cluster you create</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#000">SIGNEDINUSER</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>az ad signed-in-user show --query id --out tsv<span style="color:#204a87;font-weight:bold">)</span>

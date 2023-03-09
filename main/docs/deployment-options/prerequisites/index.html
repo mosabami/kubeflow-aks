@@ -33,7 +33,7 @@
 <meta itemprop="description" content="Set up your environment for deploying Kubeflow for AKS
 "><meta itemprop="datePublished" content="2023-03-07T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2023-03-07T00:00:00+00:00" />
-<meta itemprop="wordCount" content="151">
+<meta itemprop="wordCount" content="180">
 <meta itemprop="keywords" content="docs," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Prerequisties"/>
 <meta name="twitter:description" content="Set up your environment for deploying Kubeflow for AKS
@@ -244,7 +244,19 @@
 	<h1 id="kubeflow-on-aks-prerequisites">Kubeflow on AKS Prerequisites</h1>
 <p>For all Kubeflow on AKS deployment options, you will need the following</p>
 <ul>
-<li>An <strong>Azure Subscription</strong> (e.g. <a href="https://aka.ms/azure-free-account">Free</a> or <a href="https://aka.ms/azure-student-account">Student</a> account)</li>
+<li>An <strong>Azure Subscription</strong> (e.g. <a href="https://aka.ms/azure-free-account">Free</a> or <a href="https://aka.ms/azure-student-account">Student</a> account)
+<ul>
+<li>
+
+<div class="alert alert-warning" role="alert">
+
+
+    ⚠️ Warning: In order to complete the deployments, you will need to have either  <code>User Access Admin</code> <strong>and</strong> <code>Contributor</code> or <code>Owner</code> access to the subscription you are deploying into.
+
+</div>
+</li>
+</ul>
+</li>
 <li>The <a href="https://docs.microsoft.com/cli/azure/install-azure-cli">Azure CLI</a></li>
 <li>
 <ul>

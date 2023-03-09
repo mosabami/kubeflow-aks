@@ -26,6 +26,15 @@
         &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
 &lt;p&gt;In this lab you will deploy an Azure Kubernetes Service (AKS) cluster and other Azure services (Container Registry, Managed Identity, Key Vault) with &lt;a href=&#34;https://docs.microsoft.com/cli/azure/install-azure-cli&#34;&gt;Azure CLI&lt;/a&gt; and &lt;a href=&#34;https://docs.microsoft.com/azure/azure-resource-manager/bicep/overview&#34;&gt;Bicep&lt;/a&gt;. You will then install Kubeflow after creating custom Password. This deployment option will also make use of TLS with a self-signed certificate and an ingress controller. Swap out this self signed certificate with your own CA certs for production workloads.&lt;/p&gt;
 &lt;h2 id=&#34;deploy-kubeflow-with-password-ingress-and-tls&#34;&gt;Deploy Kubeflow with Password, Ingress and TLS&lt;/h2&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+
+
+    ⚠️ Warning: In order to complete this deployment, you will need to have either  &lt;code&gt;User Access Admin&lt;/code&gt; &lt;strong&gt;and&lt;/strong&gt; &lt;code&gt;Contributor&lt;/code&gt; or &lt;code&gt;Owner&lt;/code&gt; access to the subscription you are deploying into.
+
+&lt;/div&gt;
+
 &lt;p&gt;Use the &lt;a href=&#34;https://docs.microsoft.com/cli/azure/install-azure-cli&#34;&gt;Azure CLI&lt;/a&gt; and &lt;a href=&#34;https://docs.microsoft.com/azure/azure-resource-manager/bicep/overview&#34;&gt;Bicep&lt;/a&gt; templates to deploy the infrastructure for your application. We will be using the &lt;a href=&#34;https://github.com/Azure/AKS-Construction&#34;&gt;AKS construction&lt;/a&gt; project to rapidly deploy the required Azure resources. The project allows users the flexibility to tweak their AKS environment however they want. Please check out the &lt;a href=&#34;https://azure.github.io/AKS-Construction/&#34;&gt;AKS construction helper&lt;/a&gt; for more details about AKS construction.&lt;/p&gt;
 &lt;p&gt;You can also try out the automated option using &lt;a href=&#34;https://magefile.org/&#34;&gt;Mage&lt;/a&gt; build tool at the &lt;a href=&#34;https://github.com/Azure-Samples/azure-opensource-labs/tree/main/cloud-native/aks-kubeflow#kubeflow-on-azure-kubernetes-service-aks&#34;&gt;Azure Open Source Labs&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Login to the Azure CLI.&lt;/p&gt;
@@ -43,6 +52,8 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az aks install-cli
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Clone this repo which includes the &lt;a href=&#34;https://github.com/Azure/AKS-Construction&#34;&gt;Azure/AKS-Construction&lt;/a&gt; and &lt;a href=&#34;https://github.com/kubeflow/manifests/tree/v1.6-branch&#34;&gt;kubeflow/manifests&lt;/a&gt; repos as &lt;a href=&#34;https://git-scm.com/book/en/v2/Git-Tools-Submodules&#34;&gt;Git Submodules&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git clone --recurse-submodules https://github.com/Azure/kubeflow-aks.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Change directory into the newly cloned directory&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; kubeflow-aks
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deployment-steps&#34;&gt;Deployment steps&lt;/h2&gt;
 &lt;p&gt;Get the signed in user id so that you can get admin access to the cluster you create&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000&#34;&gt;SIGNEDINUSER&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;az ad signed-in-user show --query id --out tsv&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;
@@ -212,7 +223,19 @@
         &lt;h1 id=&#34;kubeflow-on-aks-prerequisites&#34;&gt;Kubeflow on AKS Prerequisites&lt;/h1&gt;
 &lt;p&gt;For all Kubeflow on AKS deployment options, you will need the following&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;An &lt;strong&gt;Azure Subscription&lt;/strong&gt; (e.g. &lt;a href=&#34;https://aka.ms/azure-free-account&#34;&gt;Free&lt;/a&gt; or &lt;a href=&#34;https://aka.ms/azure-student-account&#34;&gt;Student&lt;/a&gt; account)&lt;/li&gt;
+&lt;li&gt;An &lt;strong&gt;Azure Subscription&lt;/strong&gt; (e.g. &lt;a href=&#34;https://aka.ms/azure-free-account&#34;&gt;Free&lt;/a&gt; or &lt;a href=&#34;https://aka.ms/azure-student-account&#34;&gt;Student&lt;/a&gt; account)
+&lt;ul&gt;
+&lt;li&gt;
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+
+
+    ⚠️ Warning: In order to complete the deployments, you will need to have either  &lt;code&gt;User Access Admin&lt;/code&gt; &lt;strong&gt;and&lt;/strong&gt; &lt;code&gt;Contributor&lt;/code&gt; or &lt;code&gt;Owner&lt;/code&gt; access to the subscription you are deploying into.
+
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
 &lt;li&gt;The &lt;a href=&#34;https://docs.microsoft.com/cli/azure/install-azure-cli&#34;&gt;Azure CLI&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;ul&gt;
@@ -282,7 +305,18 @@
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;az aks install-cli
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Clone this repo which includes the &lt;a href=&#34;https://github.com/Azure/AKS-Construction&#34;&gt;Azure/AKS-Construction&lt;/a&gt; and &lt;a href=&#34;https://github.com/kubeflow/manifests/tree/v1.6-branch&#34;&gt;kubeflow/manifests&lt;/a&gt; repos as &lt;a href=&#34;https://git-scm.com/book/en/v2/Git-Tools-Submodules&#34;&gt;Git Submodules&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;git clone --recurse-submodules https://github.com/Azure/kubeflow-aks.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Change directory into the newly cloned directory&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; kubeflow-aks
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;deployment-steps&#34;&gt;Deployment steps&lt;/h2&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+
+
+    ⚠️ Warning: In order to complete this deployment, you will need to have either  &lt;code&gt;User Access Admin&lt;/code&gt; &lt;strong&gt;and&lt;/strong&gt; &lt;code&gt;Contributor&lt;/code&gt; or &lt;code&gt;Owner&lt;/code&gt; access to the subscription you are deploying into.
+
+&lt;/div&gt;
+
 &lt;p&gt;Get the signed in user id so that you can get admin access to the cluster you create&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000&#34;&gt;SIGNEDINUSER&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;az ad signed-in-user show --query id --out tsv&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#000&#34;&gt;RGNAME&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;kubeflow
