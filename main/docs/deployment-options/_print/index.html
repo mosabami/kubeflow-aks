@@ -211,12 +211,23 @@ This is the multi-page printable view of this section.
 </span></span><span style="display:flex;"><span><span style="color:#000">AKSCLUSTER</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span><span style="color:#204a87">echo</span> <span style="color:#000">$DEP</span> <span style="color:#000;font-weight:bold">|</span> jq -r <span style="color:#4e9a06">&#39;.properties.outputs.aksClusterName.value&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#000">TENANTID</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>az account show --query tenantId -o tsv<span style="color:#204a87;font-weight:bold">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#000">ACRNAME</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>az acr list -g <span style="color:#000">$RGNAME</span> --query <span style="color:#4e9a06">&#34;[0].name&#34;</span>  -o tsv<span style="color:#204a87;font-weight:bold">)</span>
-</span></span></code></pre></div><h2 id="install-kubelogin">Install kubelogin</h2>
+</span></span></code></pre></div><h2 id="install-kubelogin-and-log-into-the-cluster">Install kubelogin and log into the cluster</h2>
 <p>Next install kubelogin using the <a href="https://github.com/Azure/kubelogin">installation instructions</a> appropriate for your computer. From there, you&rsquo;ll need to run the following commands to download the kubeconfig file and convert it for use with kubelogin.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az aks get-credentials --resource-group <span style="color:#000">$RGNAME</span> <span style="color:#4e9a06">\
 </span></span></span><span style="display:flex;"><span><span style="color:#4e9a06"></span>  --name <span style="color:#000">$AKSCLUSTER</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>kubelogin convert-kubeconfig -l azurecli
+</span></span></code></pre></div><p>Log in to the cluster. Enter your Azure credentials when prompted afterwards to complete the login. If this is successful, kubectl should return a list of nodes.
+
+
+<div class="alert alert-warning" role="alert">
+
+
+    ⚠️ Warning: It is important that you log into the cluster at this point to avoid running into issues at a later point.
+
+</div>
+</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get nodes
 </span></span></code></pre></div><h2 id="install-kustomize">Install kustomize</h2>
 <p>Next install kustomize using the <a href="https://kubectl.docs.kubernetes.io/installation/kustomize/">installation instructions</a> appropriate for your computer.</p>
 
@@ -481,12 +492,23 @@ This is the multi-page printable view of this section.
 </span></span><span style="display:flex;"><span><span style="color:#000">AKSCLUSTER</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span><span style="color:#204a87">echo</span> <span style="color:#000">$DEP</span> <span style="color:#000;font-weight:bold">|</span> jq -r <span style="color:#4e9a06">&#39;.properties.outputs.aksClusterName.value&#39;</span><span style="color:#204a87;font-weight:bold">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#000">TENANTID</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>az account show --query tenantId -o tsv<span style="color:#204a87;font-weight:bold">)</span>
 </span></span><span style="display:flex;"><span><span style="color:#000">ACRNAME</span><span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#204a87;font-weight:bold">$(</span>az acr list -g <span style="color:#000">$RGNAME</span> --query <span style="color:#4e9a06">&#34;[0].name&#34;</span>  -o tsv<span style="color:#204a87;font-weight:bold">)</span>
-</span></span></code></pre></div><h2 id="install-kubelogin">Install kubelogin</h2>
+</span></span></code></pre></div><h2 id="install-kubelogin-and-log-into-the-cluster">Install kubelogin and log into the cluster</h2>
 <p>Next install kubelogin using the <a href="https://github.com/Azure/kubelogin">installation instructions</a> appropriate for your computer. From there, you&rsquo;ll need to run the following commands to download the kubeconfig file and convert it for use with kubelogin.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az aks get-credentials --resource-group <span style="color:#000">$RGNAME</span> <span style="color:#4e9a06">\
 </span></span></span><span style="display:flex;"><span><span style="color:#4e9a06"></span>  --name <span style="color:#000">$AKSCLUSTER</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>kubelogin convert-kubeconfig -l azurecli
+</span></span></code></pre></div><p>Log in to the cluster. Enter your Azure credentials when prompted afterwards to complete the login. If this is successful, kubectl should return a list of nodes.
+
+
+<div class="alert alert-warning" role="alert">
+
+
+    ⚠️ Warning: It is important that you log into the cluster at this point to avoid running into issues at a later point.
+
+</div>
+</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl get nodes
 </span></span></code></pre></div><h2 id="install-kustomize">Install kustomize</h2>
 <p>Next install kustomize using the <a href="https://kubectl.docs.kubernetes.io/installation/kustomize/">installation instructions</a> appropriate for your computer.</p>
 
